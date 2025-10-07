@@ -1,0 +1,785 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HabitFlow - Daily Tracker</title>
+    <!-- Load Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Load Inter font -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght=100..900&display=swap" rel="stylesheet">
+    <style>
+        /* Custom styles for better mobile experience */
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #F8FAFC;
+            /* Slate 50 */
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .container-app {
+            max-width: 600px;
+            min-height: 100vh;
+        }
+
+        .habit-card {
+            transition: all 0.2s ease;
+        }
+
+        /* Style for the profile button with icon */
+        .profile-btn-icon {
+            /* Inline SVG for user icon */
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' class='h-6 w-6' fill='none' viewBox='0 0 24 24' stroke='currentColor' stroke-width='2'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' d='M5.121 17.804A13.937 13.937 0 0112 16c2.5 0 4.847.655 6.879 1.804M15 10a3 3 0 11-6 0 3 3 0 016 0z' /%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: center;
+            background-size: 1.5rem;
+        }
+    </style>
+    <!-- Tailwind Configuration -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'primary': '#4F46E5', // Indigo
+                        'secondary': '#10B981', // Emerald
+                    },
+                }
+            }
+        }
+    </script>
+</head>
+
+<body>
+
+    <!-- Main Application Container -->
+    <div id="app" class="mx-auto container-app bg-white shadow-xl">
+
+        <!-- Header -->
+        <header
+            class="p-6 bg-primary text-white sticky top-0 z-10 rounded-b-xl shadow-lg flex justify-between items-center">
+            <div>
+                <h1 class="text-3xl font-extrabold">HabitFlow 🔥</h1>
+                <p class="text-sm opacity-80 mt-1">Transforming your routine.</p>
+            </div>
+            <!-- Profile/Auth Status Button -->
+            <button id="profile-btn"
+                class="profile-btn-icon w-10 h-10 rounded-full bg-indigo-700 hover:bg-indigo-600 transition shadow-md"
+                title="Authentication Status"></button>
+        </header>
+
+        <!-- Loading Spinner -->
+        <div id="loading" class="text-center p-12">
+            <svg class="animate-spin h-8 w-8 text-primary mx-auto" xmlns="http://www.w3.org/2000/svg" fill="none"
+                viewBox="0 0 24 24">
+                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                <path class="opacity-75" fill="currentColor"
+                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
+                </path>
+            </svg>
+        </div>
+
+        <!-- Habit List Section -->
+        <main class="p-4 pt-8">
+            <h2 class="text-xl font-bold text-gray-800 mb-4 border-b pb-2">My Daily Habits</h2>
+            <div id="habit-list" class="space-y-4">
+                <!-- Habits will be rendered here by JavaScript -->
+            </div>
+            <div id="empty-state" class="text-center p-10 text-gray-500 hidden">
+                <svg class="w-12 h-12 mx-auto mb-3 text-primary opacity-50" fill="none" stroke="currentColor"
+                    viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01">
+                    </path>
+                </svg>
+                <p>No habits yet! Add your first one below to start your journey.</p>
+            </div>
+        </main>
+
+        <!-- Habit Input Form (Fixed to bottom for mobile usability) -->
+        <section class="sticky bottom-0 bg-white p-4 border-t border-gray-200 shadow-2xl">
+            <form id="add-habit-form" class="flex gap-2">
+                <input type="text" id="new-habit-name" placeholder="e.g., Read 10 min or Meditate" required
+                    class="flex-grow p-3 border border-gray-300 rounded-lg focus:ring-primary focus:border-primary transition">
+                <button type="submit" id="add-habit-button"
+                    class="bg-primary text-white p-3 rounded-lg font-semibold hover:bg-indigo-600 transition shadow-md">
+                    Add Habit
+                </button>
+            </form>
+        </section>
+
+        <!-- Custom Modal for Errors/Confirmation/Editing -->
+        <div id="custom-modal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50 items-center justify-center p-4">
+            <div id="modal-content-container" class="bg-white p-6 rounded-xl shadow-2xl max-w-sm w-full">
+                <!-- Content injected by JavaScript -->
+                <h3 id="modal-title" class="text-xl font-bold mb-3 text-gray-800"></h3>
+                <p id="modal-message" class="text-gray-600 mb-6"></p>
+                <div id="modal-actions" class="flex flex-col gap-2">
+                    <button id="modal-close-button"
+                        class="w-full bg-primary text-white p-3 rounded-lg font-semibold hover:bg-indigo-600 transition">
+                        OK
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Firebase Imports and Script -->
+    <script type="module">
+        // Import necessary Firebase modules
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import {
+            getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged,
+            GoogleAuthProvider, signInWithPopup, signOut
+        } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import {
+            getFirestore, doc, collection, query, setDoc, addDoc, onSnapshot, updateDoc,
+            deleteDoc, serverTimestamp, setLogLevel, getDocs
+        } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+        // Global variables provided by the environment
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
+        const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : {};
+        const initialAuthToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
+
+        // Application State
+        let db, auth;
+        let userId = null;
+        let isAuthReady = false;
+        let isAnonymous = false;
+        let unsubscribeHabits = null; // To hold the listener cleanup function
+        let migratingData = false; // Flag to prevent redundant data operations during migration
+
+        // DOM Elements
+        const loadingEl = document.getElementById('loading');
+        const habitListEl = document.getElementById('habit-list');
+        const emptyStateEl = document.getElementById('empty-state');
+        const formEl = document.getElementById('add-habit-form');
+        const inputEl = document.getElementById('new-habit-name');
+        const modalEl = document.getElementById('custom-modal');
+        const modalTitleEl = document.getElementById('modal-title');
+        const modalMessageEl = document.getElementById('modal-message');
+        const modalActionsEl = document.getElementById('modal-actions');
+        const profileBtn = document.getElementById('profile-btn');
+        let defaultModalCloseBtn = null;
+
+
+        // --- UTILITY FUNCTIONS ---
+
+        function getCurrentISODate() {
+            return new Date().toISOString().split('T')[0];
+        }
+
+        // Initialize the default close button reference once
+        window.onload = () => {
+            defaultModalCloseBtn = document.getElementById('modal-close-button');
+            if (defaultModalCloseBtn) {
+                defaultModalCloseBtn.onclick = closeModal;
+            }
+        };
+
+        function closeModal() {
+            modalEl.classList.add('hidden');
+            modalEl.classList.remove('flex');
+            // Reset modal content to default state
+            modalTitleEl.textContent = '';
+            modalMessageEl.textContent = '';
+            modalActionsEl.innerHTML = ''; // Clear custom buttons
+
+            if (defaultModalCloseBtn) {
+                // Re-add the default OK button
+                const okButton = defaultModalCloseBtn.cloneNode(true);
+                okButton.onclick = closeModal;
+                modalActionsEl.appendChild(okButton);
+            }
+        }
+
+        function showModal(title, message, customButtons) {
+            // Close any active modal first to clean up
+            closeModal();
+
+            modalTitleEl.textContent = title;
+            modalMessageEl.textContent = message;
+            modalMessageEl.classList.remove('hidden'); // Ensure message area is visible
+
+            if (customButtons && customButtons.length > 0) {
+                modalMessageEl.classList.add('hidden'); // Hide default message if using custom fields/actions
+                modalActionsEl.innerHTML = '';
+                customButtons.forEach(btn => {
+                    const buttonEl = document.createElement('button');
+                    buttonEl.textContent = btn.text;
+                    buttonEl.className = btn.className;
+                    buttonEl.onclick = btn.handler;
+                    modalActionsEl.appendChild(buttonEl);
+                });
+            } else {
+                // Add back the default OK button if no custom buttons were passed
+                if (defaultModalCloseBtn) {
+                    const okButton = defaultModalCloseBtn.cloneNode(true);
+                    okButton.onclick = closeModal;
+                    modalActionsEl.appendChild(okButton);
+                }
+            }
+
+            modalEl.classList.remove('hidden');
+            modalEl.classList.add('flex');
+        }
+
+        /**
+         * Calculates both the longest consecutive streak and the current active streak.
+         * The current streak is active if the habit was completed today or yesterday.
+         * @param {string[]} datesCompleted - Sorted array of ISO date strings.
+         * @returns {{longestStreak: number, currentStreak: number}}
+         */
+        function calculateStreaks(datesCompleted) {
+            if (!datesCompleted || datesCompleted.length === 0) return { longestStreak: 0, currentStreak: 0 };
+
+            // Use Set to remove duplicates, convert to timestamps, and sort ascending
+            const uniqueDates = [...new Set(datesCompleted)].map(d => new Date(d).getTime()).sort((a, b) => a - b);
+
+            const todayISO = getCurrentISODate();
+            const todayMs = new Date(todayISO).getTime();
+            const oneDay = 24 * 60 * 60 * 1000;
+
+            let longestStreak = 0;
+            let currentStreak = 0;
+            let tempStreak = 0;
+
+            // 1. Calculate Longest Streak
+            for (let i = 0; i < uniqueDates.length; i++) {
+                if (i === 0) {
+                    tempStreak = 1;
+                } else {
+                    const diff = uniqueDates[i] - uniqueDates[i - 1];
+                    if (diff === oneDay) {
+                        tempStreak++;
+                    } else if (diff > oneDay) {
+                        tempStreak = 1; // Streak broken, restart
+                    }
+                }
+                longestStreak = Math.max(longestStreak, tempStreak);
+            }
+
+            // 2. Calculate Current Streak
+            const isTodayCompleted = uniqueDates.includes(todayMs);
+            const isYesterdayCompleted = uniqueDates.includes(todayMs - oneDay);
+
+            if (!isTodayCompleted && !isYesterdayCompleted) {
+                // If neither today nor yesterday is completed, current streak is 0.
+                return { longestStreak, currentStreak: 0 };
+            }
+
+            // Find the index of the latest completed day (today or yesterday)
+            let checkFromDateMs = isTodayCompleted ? todayMs : todayMs - oneDay;
+            let startIndex = uniqueDates.indexOf(checkFromDateMs);
+
+            if (startIndex === -1) {
+                // This shouldn't happen based on the check above, but for safety
+                return { longestStreak, currentStreak: 0 };
+            }
+
+            currentStreak = 1; // Start with the latest completed day
+
+            // Iterate backward
+            for (let i = startIndex; i > 0; i--) {
+                const currentDateMs = uniqueDates[i];
+                const previousDateMs = uniqueDates[i - 1];
+
+                // Check if previous date is exactly one day before the current date
+                if (currentDateMs - previousDateMs === oneDay) {
+                    currentStreak++;
+                } else {
+                    break; // Streak broken
+                }
+            }
+
+            return { longestStreak, currentStreak };
+        }
+
+
+        // --- AUTHENTICATION FUNCTIONS ---
+
+        function updateProfileButton(user) {
+            if (user) {
+                let statusText = user.isAnonymous ? 'Anonymous' : (user.displayName || user.email || 'User');
+                profileBtn.title = `Signed in as: ${statusText}`;
+                profileBtn.textContent = '';
+                // Use first letter of name or 'A' for Anonymous/generic user
+                profileBtn.innerHTML = user.isAnonymous
+                    ? `<span class="text-sm font-bold">A</span>`
+                    : `<span class="text-sm font-bold">${(user.displayName || user.email || '?').charAt(0).toUpperCase()}</span>`;
+                profileBtn.classList.remove('profile-btn-icon');
+                profileBtn.classList.add('bg-secondary', 'text-white');
+
+            } else {
+                profileBtn.title = 'Sign In / Status';
+                profileBtn.textContent = '';
+                profileBtn.classList.add('profile-btn-icon');
+                profileBtn.classList.remove('bg-secondary', 'text-white');
+            }
+        }
+
+        async function signInWithGoogle() {
+            if (!auth) return;
+            const provider = new GoogleAuthProvider();
+            try {
+                // The onAuthStateChanged listener will fire and handle the data migration automatically.
+                const result = await signInWithPopup(auth, provider);
+                const newUser = result.user;
+
+                showModal("Sign In Successful", `Welcome, ${newUser.displayName || newUser.email}! Your account is now permanent.`);
+            } catch (error) {
+                console.error("Google Sign-In Error:", error);
+                const message = error.code === 'auth/popup-closed-by-user'
+                    ? 'Sign-in window closed. Please try again.'
+                    : `Sign-in failed: ${error.message}`;
+                showModal("Sign In Failed", message);
+            }
+        }
+
+        async function handleSignOut() {
+            if (!auth) return;
+            try {
+                await signOut(auth);
+                showModal("Signed Out", "You have been signed out. You are now browsing anonymously.");
+            } catch (error) {
+                console.error("Sign Out Error:", error);
+                showModal("Sign Out Failed", "Could not sign out. Please try again.");
+            }
+        }
+
+        async function migrateAnonymousData(oldId, newId) {
+            if (oldId === newId || migratingData) return;
+
+            migratingData = true;
+
+            // Immediately stop the existing listener before migration begins
+            if (unsubscribeHabits) {
+                unsubscribeHabits();
+                unsubscribeHabits = null;
+            }
+
+            console.log(`Starting data migration from anonymous ID ${oldId} to permanent ID ${newId}`);
+
+            try {
+                const oldCollectionRef = collection(db, 'artifacts', appId, 'users', oldId, 'habits');
+                const newCollectionRef = collection(db, 'artifacts', appId, 'users', newId, 'habits');
+
+                const oldDocsSnapshot = await getDocs(oldCollectionRef);
+
+                if (oldDocsSnapshot.empty) {
+                    console.log("No data found in anonymous account to migrate.");
+                    return;
+                }
+
+                // Check if permanent account already has data
+                const newDocsSnapshot = await getDocs(newCollectionRef);
+                if (!newDocsSnapshot.empty) {
+                    console.log("Permanent account already has data. Skipping migration to avoid overwrites.");
+                    return;
+                }
+
+                let migratedCount = 0;
+                // Copy documents one by one
+                for (const docSnapshot of oldDocsSnapshot.docs) {
+                    const data = docSnapshot.data();
+                    // Use a new document ID in the new user's collection
+                    await addDoc(newCollectionRef, data);
+                    // Optional: delete old anonymous document
+                    await deleteDoc(doc(oldCollectionRef, docSnapshot.id));
+                    migratedCount++;
+                }
+
+                console.log(`Successfully migrated ${migratedCount} habits.`);
+                showModal("Migration Complete", `${migratedCount} habits from your previous anonymous session have been transferred to your permanent account.`);
+
+            } catch (error) {
+                console.error("Data Migration Error:", error);
+                showModal("Migration Failed", "An error occurred while transferring your habits. Please check the console.");
+            } finally {
+                migratingData = false;
+                loadingEl.classList.add('hidden'); // Hide loading spinner after migration completes
+                isAuthReady = true;
+                // Crucial: Restart listener after migration completes under the new user ID
+                setupHabitsListener();
+            }
+        }
+
+        // PROFILE BUTTON HANDLER
+        profileBtn.addEventListener('click', () => {
+            const currentUser = auth.currentUser;
+            if (!isAuthReady) {
+                showModal("Initializing", "The app is still loading. Please wait a moment.");
+                return;
+            }
+
+            // User is signed in (anonymous or permanent)
+            if (currentUser) {
+                const statusText = currentUser.isAnonymous
+                    ? 'You are currently signed in anonymously. Your data is only saved on this device unless you register.'
+                    : `Signed in as: ${currentUser.displayName || currentUser.email}. This is a permanent account.`;
+
+                const buttons = [
+                    {
+                        text: currentUser.isAnonymous ? 'Sign In with Google (Save Data)' : 'Sign Out',
+                        className: `w-full p-3 rounded-lg font-semibold transition ${currentUser.isAnonymous ? 'bg-secondary text-white hover:bg-emerald-600' : 'bg-red-500 text-white hover:bg-red-600'}`,
+                        handler: currentUser.isAnonymous ? signInWithGoogle : handleSignOut
+                    },
+                    {
+                        text: 'Cancel',
+                        className: 'w-full bg-gray-200 text-gray-800 p-3 rounded-lg font-semibold hover:bg-gray-300 transition',
+                        handler: closeModal
+                    }
+                ];
+
+                // Remove modal message for cleaner action display
+                showModal("Account Status", `User ID: ${userId}`, buttons);
+
+                // Manually inject the status message back into the action area
+                const statusP = document.createElement('p');
+                statusP.className = 'text-sm text-center text-gray-700 mb-4 px-2';
+                statusP.textContent = statusText;
+                modalActionsEl.insertAdjacentElement('beforebegin', statusP);
+
+
+            } else {
+                // Should not happen if onAuthStateChanged works correctly, but safe fallback
+                showModal("Authentication Required", "Please refresh the page if you see this message.");
+            }
+        });
+
+
+        // --- FIREBASE INITIALIZATION AND AUTHENTICATION ---
+
+        try {
+            // setLogLevel('Debug'); 
+            const app = initializeApp(firebaseConfig);
+            db = getFirestore(app);
+            auth = getAuth(app);
+
+            let previousUserId = null;
+
+            onAuthStateChanged(auth, async (user) => {
+                const currentUserId = user ? user.uid : null;
+
+                if (!user) {
+                    try {
+                        // User signed out, or initial state
+                        if (initialAuthToken) {
+                            await signInWithCustomToken(auth, initialAuthToken);
+                        } else {
+                            await signInAnonymously(auth);
+                        }
+                    } catch (error) {
+                        console.error("Authentication error:", error);
+                        showModal("Authentication Failed", "Could not log you in. Please refresh the page.");
+                    }
+                } else {
+                    userId = currentUserId;
+                    isAnonymous = user.isAnonymous;
+                    updateProfileButton(user);
+
+                    console.log(`User authenticated. ID: ${userId}, Anonymous: ${isAnonymous}`);
+
+                    // Handle Anonymous to Permanent Migration
+                    if (previousUserId && previousUserId !== currentUserId && !user.isAnonymous) {
+                        // This means a sign-in transition just occurred (e.g., anonymous -> Google)
+                        loadingEl.classList.remove('hidden'); // Show loading spinner during migration
+                        migrateAnonymousData(previousUserId, currentUserId);
+                        // migrateAnonymousData calls setupHabitsListener on completion
+                    } else {
+                        // FIX: Introduce a small delay to let the Firebase connection fully stabilize
+                        setTimeout(() => {
+                            isAuthReady = true;
+                            loadingEl.classList.add('hidden');
+                            // Start listening for habit changes for initial load or regular sign-out/sign-in
+                            setupHabitsListener();
+                        }, 500); // Wait 500ms
+                    }
+
+                    // Update previousUserId for the next state change
+                    previousUserId = currentUserId;
+                }
+            });
+
+        } catch (error) {
+            console.error("Firebase Initialization Error:", error);
+            loadingEl.classList.add('hidden');
+            showModal("Setup Error", "Failed to initialize the application. Check console for details.");
+        }
+
+
+        // --- FIRESTORE DATA FUNCTIONS ---
+
+        function getHabitCollectionRef() {
+            if (!db || !userId) {
+                console.error("Firestore or User ID not ready.");
+                return null;
+            }
+            // Private data path: /artifacts/{appId}/users/{userId}/habits
+            return collection(db, 'artifacts', appId, 'users', userId, 'habits');
+        }
+
+        async function addHabit(name) {
+            if (!isAuthReady || migratingData) {
+                showModal("Access Denied", "Please wait for initialization or data migration to complete.");
+                return;
+            }
+            try {
+                const habitRef = getHabitCollectionRef();
+                if (!habitRef) return;
+
+                await addDoc(habitRef, {
+                    name: name.trim(),
+                    createdAt: serverTimestamp(),
+                    datesCompleted: [],
+                });
+                console.log("Habit added successfully:", name);
+                inputEl.value = ''; // Clear input on success
+            } catch (error) {
+                console.error("Error adding document: ", error);
+                showModal("Data Error", "Failed to add habit. Try again.");
+            }
+        }
+
+        async function editHabit(habitId, newName) {
+            if (!isAuthReady || migratingData) {
+                showModal("Access Denied", "Please wait for initialization or data migration to complete.");
+                return;
+            }
+            if (!newName || newName.trim() === '') {
+                showModal("Input Required", "Habit name cannot be empty.");
+                return;
+            }
+            try {
+                const habitRef = doc(getHabitCollectionRef(), habitId);
+                await updateDoc(habitRef, { name: newName.trim() });
+                console.log("Habit updated successfully:", habitId, newName);
+                closeModal();
+            } catch (error) {
+                console.error("Error updating document: ", error);
+                showModal("Data Error", "Failed to update habit name. Try again.");
+            }
+        }
+
+
+        async function toggleCompletion(habitId, datesCompleted) {
+            if (!isAuthReady || migratingData) return;
+
+            const today = getCurrentISODate();
+            const habitRef = doc(getHabitCollectionRef(), habitId);
+            let newDatesCompleted;
+
+            if (datesCompleted.includes(today)) {
+                // Remove today's date (Un-complete)
+                newDatesCompleted = datesCompleted.filter(d => d !== today);
+            } else {
+                // Add today's date (Complete)
+                newDatesCompleted = [...datesCompleted, today];
+            }
+
+            try {
+                // Sort the datesCompleted array before saving
+                newDatesCompleted.sort();
+                await updateDoc(habitRef, { datesCompleted: newDatesCompleted });
+                console.log("Habit completion toggled:", habitId, newDatesCompleted.includes(today) ? 'Completed' : 'Uncompleted');
+            } catch (error) {
+                console.error("Error toggling completion: ", error);
+                showModal("Update Error", "Could not update habit completion.");
+            }
+        }
+
+        async function deleteHabit(habitId) {
+            if (!isAuthReady || migratingData) return;
+            try {
+                const habitRef = doc(getHabitCollectionRef(), habitId);
+                await deleteDoc(habitRef);
+                console.log("Habit deleted:", habitId);
+            } catch (error) {
+                console.error("Error deleting habit: ", error);
+                showModal("Delete Error", "Could not delete habit.");
+            }
+        }
+
+        // REAL-TIME LISTENER SETUP
+        function setupHabitsListener() {
+            // Do not proceed if data is being moved between accounts
+            if (migratingData) {
+                console.log("Listener setup skipped: Data migration in progress.");
+                return;
+            }
+
+            if (unsubscribeHabits) {
+                unsubscribeHabits(); // Clean up previous listener if it exists
+                unsubscribeHabits = null; // Explicitly nullify
+            }
+
+            const habitRef = getHabitCollectionRef();
+            if (!habitRef) {
+                // If habitRef is null, it means userId or db isn't ready.
+                return;
+            }
+
+            // Fetch data and sort locally to avoid Firestore index errors
+            const q = query(habitRef);
+
+            unsubscribeHabits = onSnapshot(q, (snapshot) => {
+                const habits = [];
+                snapshot.forEach((doc) => {
+                    // Spread the document data and add the unique ID
+                    habits.push({ id: doc.id, ...doc.data() });
+                });
+
+                // Sort habits by creation time in JavaScript (newest first)
+                habits.sort((a, b) => {
+                    const timeA = a.createdAt ? a.createdAt.toMillis() : 0;
+                    const timeB = b.createdAt ? b.createdAt.toMillis() : 0;
+                    return timeB - timeA;
+                });
+
+                renderHabits(habits);
+            }, (error) => {
+                console.error("Habits snapshot error:", error);
+                // Removed showModal here as it might be disruptive if it's an intermittent error
+                // showModal("Data Error", "Failed to load habits in real-time. Check console for permissions error.");
+            });
+        }
+
+
+        // UI RENDERING
+        function renderHabits(habits) {
+            habitListEl.innerHTML = '';
+            const today = getCurrentISODate();
+
+            if (habits.length === 0) {
+                emptyStateEl.classList.remove('hidden');
+            } else {
+                emptyStateEl.classList.add('hidden');
+
+                habits.forEach(habit => {
+                    const isCompleted = habit.datesCompleted && habit.datesCompleted.includes(today);
+                    const { longestStreak, currentStreak } = calculateStreaks(habit.datesCompleted || []);
+
+                    const card = document.createElement('div');
+                    card.id = `habit-${habit.id}`;
+                    card.className = `habit-card p-4 rounded-xl shadow-md flex items-center justify-between transition ${isCompleted ? 'bg-secondary text-white' : 'bg-white border border-gray-200'}`;
+
+                    card.innerHTML = `
+                        <div class="flex-grow mr-4">
+                            <h3 class="text-lg font-bold ${isCompleted ? 'text-white' : 'text-gray-800'}">${habit.name}</h3>
+                            <p class="text-xs opacity-90 mt-1">
+                                Current: <span class="font-semibold">${currentStreak} days</span> | Longest: <span class="font-semibold">${longestStreak} days</span>
+                            </p>
+                        </div>
+                        <div class="flex items-center space-x-2">
+                             <button class="edit-btn p-1 rounded-full transition hover:bg-gray-100 ${isCompleted ? 'text-white hover:bg-secondary/70' : 'text-gray-500 hover:text-primary'}"
+                                data-id="${habit.id}"
+                                data-name="${habit.name}"
+                                aria-label="Edit habit name"
+                            >
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path></svg>
+                            </button>
+                            <button class="toggle-btn p-3 rounded-full transition transform hover:scale-110 shadow-lg ${isCompleted ? 'bg-white text-secondary' : 'bg-secondary text-white hover:bg-emerald-600'}"
+                                data-id="${habit.id}"
+                                data-completed='${JSON.stringify(habit.datesCompleted || [])}'
+                                aria-label="${isCompleted ? 'Mark as incomplete' : 'Mark as complete'}"
+                            >
+                                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="${isCompleted ? 'M6 18L18 6M6 6l12 12' : 'M5 13l4 4L19 7'}"></path></svg>
+                            </button>
+                            <button class="delete-btn p-1 rounded-full transition hover:bg-gray-100 ${isCompleted ? 'text-white hover:bg-secondary/70' : 'text-red-500'}"
+                                data-id="${habit.id}"
+                                aria-label="Delete habit"
+                            >
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                            </button>
+                        </div>
+                    `;
+                    habitListEl.appendChild(card);
+                });
+
+                // Attach event listeners to all new buttons
+                document.querySelectorAll('.toggle-btn').forEach(btn => {
+                    btn.addEventListener('click', () => {
+                        const habitId = btn.getAttribute('data-id');
+                        const datesCompleted = JSON.parse(btn.getAttribute('data-completed'));
+                        toggleCompletion(habitId, datesCompleted);
+                    });
+                });
+
+                // EDIT BUTTON LOGIC
+                document.querySelectorAll('.edit-btn').forEach(btn => {
+                    btn.addEventListener('click', () => {
+                        const habitId = btn.getAttribute('data-id');
+                        const currentName = btn.getAttribute('data-name');
+
+                        const inputEl = document.createElement('input');
+                        inputEl.type = 'text';
+                        inputEl.value = currentName;
+                        inputEl.id = 'edit-habit-input';
+                        inputEl.className = 'w-full p-3 border border-gray-300 rounded-lg focus:ring-primary focus:border-primary transition mb-4 text-gray-800';
+
+                        showModal("Edit Habit Name", "", [
+                            {
+                                text: 'Save Changes',
+                                className: 'w-full bg-secondary text-white p-3 rounded-lg font-semibold hover:bg-emerald-600 transition',
+                                handler: () => {
+                                    editHabit(habitId, inputEl.value);
+                                }
+                            },
+                            {
+                                text: 'Cancel',
+                                className: 'w-full bg-gray-200 text-gray-800 p-3 rounded-lg font-semibold hover:bg-gray-300 transition',
+                                handler: closeModal
+                            }
+                        ]);
+
+                        // Manually insert input field before the action buttons
+                        modalActionsEl.insertAdjacentElement('beforebegin', inputEl);
+                        inputEl.focus();
+                    });
+                });
+
+                // DELETE BUTTON LOGIC
+                document.querySelectorAll('.delete-btn').forEach(btn => {
+                    btn.addEventListener('click', () => {
+                        const habitId = btn.getAttribute('data-id');
+
+                        showModal(
+                            "Confirm Deletion",
+                            "Are you sure you want to permanently delete this habit? All progress will be lost.",
+                            [
+                                {
+                                    text: 'Delete Habit',
+                                    className: 'w-full bg-red-500 text-white p-3 rounded-lg font-semibold hover:bg-red-600 transition',
+                                    handler: () => {
+                                        deleteHabit(habitId);
+                                        closeModal();
+                                    }
+                                },
+                                {
+                                    text: 'Cancel',
+                                    className: 'w-full bg-gray-200 text-gray-800 p-3 rounded-lg font-semibold hover:bg-gray-300 transition',
+                                    handler: closeModal
+                                }
+                            ]
+                        );
+                    });
+                });
+            }
+        }
+
+        // EVENT HANDLER FOR FORM SUBMISSION
+        formEl.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const habitName = inputEl.value.trim();
+            if (habitName) {
+                addHabit(habitName);
+            } else {
+                showModal("Input Required", "Please enter a name for your new habit.");
+            }
+        });
+    </script>
+</body>
+
+</html>

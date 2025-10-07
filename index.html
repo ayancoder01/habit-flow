@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Transform Your Day | HabitFlow App</title>
+    <!-- Load Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Configure Tailwind for the Inter font and a custom color palette -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'primary': '#4F46E5', // Indigo
+                        'primary-dark': '#4338CA',
+                        'secondary': '#10B981', // Emerald
+                        'background': '#F9FAFB', // Light Gray
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    boxShadow: {
+                        '3xl': '0 35px 60px -15px rgba(0, 0, 0, 0.3)',
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- Load Inter font from Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet">
+    <style>
+        /* Custom scroll behavior for smooth transitions on anchor clicks */
+        html {
+            scroll-behavior: smooth;
+        }
+
+        /* Mobile optimization: Ensure content is readable */
+        .container {
+            padding-left: 1rem;
+            padding-right: 1rem;
+        }
+
+        @media (min-width: 640px) {
+            .container {
+                padding-left: 2rem;
+                padding-right: 2rem;
+            }
+        }
+    </style>
+</head>
+
+<body class="font-sans antialiased bg-background text-gray-800">
+
+    <!-- Header/Navigation (Simple for conversion focus) -->
+    <header class="sticky top-0 z-50 bg-white shadow-md">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
+            <a href="#hero"
+                class="text-2xl font-bold text-primary hover:text-primary-dark transition duration-300">HabitFlow</a>
+            <a href="#cta-final"
+                class="hidden sm:inline-block px-4 py-2 text-sm font-semibold text-white bg-primary rounded-lg hover:bg-primary-dark transition duration-300 shadow-md">Get
+                Started</a>
+        </div>
+    </header>
+
+    <!-- 1. HERO SECTION -->
+    <section id="hero" class="py-16 md:py-24 bg-white border-b-8 border-secondary">
+        <div class="max-w-6xl mx-auto container text-center">
+            <!-- EMOTIONAL HEADLINE -->
+            <h1 class="text-4xl sm:text-6xl font-extrabold tracking-tight text-gray-900 mb-6 leading-tight">
+                <span class="block">Transform Your Day,</span>
+                <span class="block text-primary">One Habit at a Time.</span>
+            </h1>
+
+            <!-- PERSUASIVE PARAGRAPH (Addressing pain point and offering solution) -->
+            <p class="mt-4 text-lg sm:text-xl text-gray-600 max-w-3xl mx-auto mb-10">
+                **Tired of starting over?** HabitFlow is the simple, powerful app designed to help you build
+                **unbreakable consistency**. Stop relying on motivation and start building a system that guarantees
+                progress. Finally feel in control of your future.
+            </p>
+            <!-- DOWNLOAD BUTTON (Primary CTA) -->
+            <a href="app.html" src="app.html"
+                class="inline-block px-12 py-4 text-xl font-bold text-white bg-secondary rounded-xl shadow-lg hover:bg-emerald-600 transition duration-300 transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-secondary focus:ring-opacity-50">
+                Open Now (its free)
+            </a>
+
+            <!-- Small Trust/Commitment Line -->
+            <p class="mt-4 text-sm text-gray-500">
+                Join 50,000+ users who are building better lives right now.
+            </p>
+        </div>
+    </section>
+
+    <!-- 2. FEATURE 1: Consistency (Image Left / Text Right) -->
+    <section class="py-16 md:py-24">
+        <div class="max-w-6xl mx-auto container grid md:grid-cols-2 gap-12 items-center">
+            <!-- SVG Mockup 1 (Image Left) -->
+            <div class="flex justify-center p-4">
+                <!-- Mockup: Streak Visualization (Green Checks) -->
+                <div class="w-full max-w-sm rounded-3xl shadow-3xl bg-white p-8">
+                    <div
+                        class="h-10 w-10 bg-primary rounded-xl mb-4 flex items-center justify-center text-white text-2xl font-bold">
+                        ✓</div>
+                    <h3 class="text-xl font-bold text-gray-900 mb-6">Your Weekly Flow</h3>
+                    <!-- Mock Habit List -->
+                    <div class="space-y-4">
+                        <div class="flex items-center justify-between">
+                            <span class="text-lg font-medium text-gray-700">Read 20 min</span>
+                            <span class="flex space-x-1">
+                                <span class="w-5 h-5 bg-secondary rounded-full"></span>
+                                <span class="w-5 h-5 bg-secondary rounded-full"></span>
+                                <span class="w-5 h-5 bg-secondary rounded-full"></span>
+                                <span class="w-5 h-5 bg-secondary rounded-full"></span>
+                                <span class="w-5 h-5 bg-gray-200 rounded-full"></span>
+                            </span>
+                        </div>
+                        <div class="flex items-center justify-between">
+                            <span class="text-lg font-medium text-gray-700">Workout</span>
+                            <span class="flex space-x-1">
+                                <span class="w-5 h-5 bg-secondary rounded-full"></span>
+                                <span class="w-5 h-5 bg-secondary rounded-full"></span>
+                                <span class="w-5 h-5 bg-gray-200 rounded-full"></span>
+                                <span class="w-5 h-5 bg-gray-200 rounded-full"></span>
+                                <span class="w-5 h-5 bg-secondary rounded-full"></span>
+                            </span>
+                        </div>
+                        <div class="flex items-center justify-between">
+                            <span class="text-lg font-medium text-gray-700">Meditate</span>
+                            <span class="flex space-x-1">
+                                <span class="w-5 h-5 bg-secondary rounded-full"></span>
+                                <span class="w-5 h-5 bg-secondary rounded-full"></span>
+                                <span class="w-5 h-5 bg-secondary rounded-full"></span>
+                                <span class="w-5 h-5 bg-secondary rounded-full"></span>
+                                <span class="w-5 h-5 bg-secondary rounded-full"></span>
+                            </span>
+                        </div>
+                    </div>
+                    <p class="text-center mt-6 text-sm text-gray-500">Day 5/7 completed.</p>
+                </div>
+            </div>
+
+            <!-- Text Content (Right) -->
+            <div class="md:order-last">
+                <p class="text-base font-semibold text-primary uppercase">Feature 1</p>
+                <!-- COPYWRITING: Focus on ease and overcoming failure -->
+                <h2 class="mt-2 text-3xl sm:text-4xl font-extrabold tracking-tight text-gray-900">
+                    Stop Starting Over.
+                </h2>
+                <p class="mt-4 text-xl text-gray-600">
+                    You don't need willpower, you need a system. Our **intuitive streak calendar** makes logging your
+                    progress ridiculously simple. When you see those green squares fill up, the psychological reward
+                    becomes addictive. **Never lose momentum again.**
+                </p>
+                <ul class="mt-6 space-y-3 text-lg text-gray-700">
+                    <li class="flex items-start">
+                        <svg class="flex-shrink-0 h-6 w-6 text-secondary mt-1" fill="none" stroke="currentColor"
+                            viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                        <span class="ml-3">One-tap completion for instant satisfaction.</span>
+                    </li>
+                    <li class="flex items-start">
+                        <svg class="flex-shrink-0 h-6 w-6 text-secondary mt-1" fill="none" stroke="currentColor"
+                            viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                        <span class="ml-3">Visual reminders to conquer procrastination.</span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <!-- 3. FEATURE 2: Progress Visualization (Text Left / Image Right) -->
+    <section class="py-16 md:py-24 bg-white">
+        <div class="max-w-6xl mx-auto container grid md:grid-cols-2 gap-12 items-center">
+            <!-- Text Content (Left) -->
+            <div class="md:order-first">
+                <p class="text-base font-semibold text-primary uppercase">Feature 2</p>
+                <!-- COPYWRITING: Focus on evidence and confidence -->
+                <h2 class="mt-2 text-3xl sm:text-4xl font-extrabold tracking-tight text-gray-900">
+                    See The Proof of Your Effort.
+                </h2>
+                <p class="mt-4 text-xl text-gray-600">
+                    Motivation is fleeting, but **evidence is permanent**. HabitFlow transforms your daily actions into
+                    compelling data visualizations. Watch your consistency line trend upwards and build **unbreakable
+                    confidence** knowing your hard work is paying off.
+                </p>
+                <ul class="mt-6 space-y-3 text-lg text-gray-700">
+                    <li class="flex items-start">
+                        <svg class="flex-shrink-0 h-6 w-6 text-secondary mt-1" fill="none" stroke="currentColor"
+                            viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                        <span class="ml-3">Detailed charts to track daily, weekly, and monthly success.</span>
+                    </li>
+                    <li class="flex items-start">
+                        <svg class="flex-shrink-0 h-6 w-6 text-secondary mt-1" fill="none" stroke="currentColor"
+                            viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                        <span class="ml-3">Celebrate milestones with automated notifications.</span>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- SVG Mockup 2 (Image Right) -->
+            <div class="flex justify-center p-4">
+                <!-- Mockup: Progress Graph -->
+                <div class="w-full max-w-sm rounded-3xl shadow-3xl bg-white p-8">
+                    <h3 class="text-xl font-bold text-gray-900 mb-6 flex justify-between items-center">
+                        Consistency Score
+                        <span class="text-3xl font-extrabold text-primary">92%</span>
+                    </h3>
+                    <!-- Chart area -->
+                    <div class="h-40 relative">
+                        <!-- Simulated Chart Line -->
+                        <svg class="w-full h-full" viewBox="0 0 100 100" preserveAspectRatio="none">
+                            <!-- Background Grid -->
+                            <path d="M0 25 L100 25 M0 50 L100 50 M0 75 L100 75" stroke="#E5E7EB" stroke-width="0.5" />
+                            <!-- Data Line (Simulated increasing streak) -->
+                            <polyline fill="none" stroke="#10B981" stroke-width="3"
+                                points="0,90 10,80 20,75 30,65 40,50 50,40 60,35 70,30 80,25 90,15 100,10" />
+                            <!-- Dot at the end (latest score) -->
+                            <circle cx="100" cy="10" r="3" fill="#4F46E5" />
+                        </svg>
+                    </div>
+                    <p class="text-center mt-6 text-sm text-gray-500">Your last 30 days of growth.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 4. FEATURE 3: Goal Setting (Image Left / Text Right) -->
+    <section class="py-16 md:py-24">
+        <div class="max-w-6xl mx-auto container grid md:grid-cols-2 gap-12 items-center">
+            <!-- SVG Mockup 3 (Image Left) -->
+            <div class="flex justify-center p-4">
+                <!-- Mockup: Goal/Project list -->
+                <div class="w-full max-w-sm rounded-3xl shadow-3xl bg-white p-8">
+                    <h3 class="text-xl font-bold text-gray-900 mb-6 flex items-center">
+                        <svg class="w-6 h-6 mr-2 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                            xmlns="http://www.w3.org/2000/svg">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M3 6l3 1m3 11l-3-1m0 0l-3-1m3 1l3 1m0 0l3 1m0-1l-3-1m0 1l3 1M8 12h8m-4-4v8"></path>
+                        </svg>
+                        My Life Vision
+                    </h3>
+                    <!-- Mock Goal List -->
+                    <div class="space-y-4">
+                        <div class="p-3 bg-red-50 rounded-lg border border-red-200">
+                            <p class="text-sm font-semibold text-red-700">Financial Freedom</p>
+                            <div class="w-full bg-red-200 rounded-full h-1 mt-1">
+                                <div class="bg-red-500 h-1 rounded-full w-4/5"></div>
+                            </div>
+                        </div>
+                        <div class="p-3 bg-blue-50 rounded-lg border border-blue-200">
+                            <p class="text-sm font-semibold text-blue-700">Health & Fitness</p>
+                            <div class="w-full bg-blue-200 rounded-full h-1 mt-1">
+                                <div class="bg-blue-500 h-1 rounded-full w-2/3"></div>
+                            </div>
+                        </div>
+                        <div class="p-3 bg-green-50 rounded-lg border border-green-200">
+                            <p class="text-sm font-semibold text-green-700">Creative Projects</p>
+                            <div class="w-full bg-green-200 rounded-full h-1 mt-1">
+                                <div class="bg-green-500 h-1 rounded-full w-1/4"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <button
+                        class="w-full mt-4 p-3 text-sm font-semibold text-primary border border-primary rounded-lg hover:bg-primary/10 transition">Add
+                        New Area</button>
+                </div>
+            </div>
+
+            <!-- Text Content (Right) -->
+            <div class="md:order-last">
+                <p class="text-base font-semibold text-primary uppercase">Feature 3</p>
+                <!-- COPYWRITING: Focus on purpose and clarity -->
+                <h2 class="mt-2 text-3xl sm:text-4xl font-extrabold tracking-tight text-gray-900">
+                    Design Your Destiny.
+                </h2>
+                <p class="mt-4 text-xl text-gray-600">
+                    Great habits serve a greater purpose. HabitFlow allows you to link your daily tasks directly to your
+                    **long-term vision**. Stop feeling busy and start feeling **effective**. Get absolute clarity on
+                    *why* you are doing what you're doing.
+                </p>
+                <ul class="mt-6 space-y-3 text-lg text-gray-700">
+                    <li class="flex items-start">
+                        <svg class="flex-shrink-0 h-6 w-6 text-secondary mt-1" fill="none" stroke="currentColor"
+                            viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                        <span class="ml-3">Group habits by goal for a clear roadmap to success.</span>
+                    </li>
+                    <li class="flex items-start">
+                        <svg class="flex-shrink-0 h-6 w-6 text-secondary mt-1" fill="none" stroke="currentColor"
+                            viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                        <span class="ml-3">Eliminate 'busywork' and focus only on what truly moves the needle.</span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+
+    <!-- 5. FINAL CTA SECTION -->
+    <section id="cta-final" class="py-20 md:py-32 bg-primary">
+        <div class="max-w-6xl mx-auto container text-center text-white">
+            <!-- STRONG HEADLINE -->
+            <h2 class="text-4xl sm:text-5xl font-extrabold tracking-tight mb-4">
+                Ready to Change Your Life?
+            </h2>
+
+            <!-- SUPPORTING TEXT (Urgency & Loss Aversion) -->
+            <p class="text-xl sm:text-2xl opacity-90 max-w-3xl mx-auto mb-10">
+                **Don't wait another day** and let another goal slip away. The life you’ve always dreamt of starts with
+                the habit you build *today*. It only takes 30 seconds to download and start winning.
+            </p>
+
+            <!-- DOWNLOAD BUTTON (Secondary CTA) -->
+            <a href="#"
+                class="inline-block px-12 py-4 text-xl font-bold text-primary bg-secondary rounded-xl shadow-xl hover:bg-emerald-500 transition duration-300 transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-secondary focus:ring-opacity-70">
+                Get HabitFlow FREE Today
+            </a>
+
+            <!-- TRUST ELEMENTS (Social Proof) -->
+            <div class="mt-12">
+                <div class="flex justify-center space-x-6">
+                    <!-- Rating Stars -->
+                    <div class="flex items-center space-x-2">
+                        <span class="text-2xl">⭐️⭐️⭐️⭐️⭐️</span>
+                        <span class="text-lg font-semibold">4.9 App Store Rating</span>
+                    </div>
+                    <!-- User Count -->
+                    <div class="hidden sm:flex items-center space-x-2">
+                        <svg class="w-6 h-6 text-secondary" fill="currentColor" viewBox="0 0 20 20"
+                            xmlns="http://www.w3.org/2000/svg">
+                            <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z"
+                                clip-rule="evenodd"></path>
+                        </svg>
+                        <span class="text-lg font-semibold">Over 50K Users</span>
+                    </div>
+                </div>
+
+                <!-- Testimonial Mockup -->
+                <div class="mt-8 max-w-xl mx-auto p-6 bg-white bg-opacity-10 rounded-xl shadow-lg">
+                    <p class="italic text-lg">"I finally stuck with meditation for 90 days straight. This app is a
+                        game-changer for consistency."</p>
+                    <p class="mt-2 font-medium text-sm text-secondary">- Sarah K., HabitFlow User</p>
+                </div>
+
+            </div>
+
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="py-8 bg-gray-900 text-center text-gray-400">
+        <div class="max-w-6xl mx-auto container">
+            <p>&copy; 2024 HabitFlow Inc. | All Rights Reserved.</p>
+            <div class="mt-2 space-x-4 text-sm">
+                <a href="#" class="hover:text-white transition">Privacy Policy</a>
+                <a href="#" class="hover:text-white transition">Terms of Service</a>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Simple, clean JS for smooth scrolling when clicking on internal links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                // Only prevent default if the link targets a section on this page (not the general download link '#')
+                if (this.getAttribute('href').length > 1) {
+                    e.preventDefault();
+                    document.querySelector(this.getAttribute('href')).scrollIntoView({
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+    </script>
+</body>
+
+</html>
